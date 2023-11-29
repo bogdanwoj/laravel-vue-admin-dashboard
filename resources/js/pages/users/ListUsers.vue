@@ -1,0 +1,211 @@
+<template>
+    <div class="content-header">
+        <div class="container-fluid">
+            <button @click="addUser" type="button" class="btn btn-primary mb-3" >
+                Add New User
+            </button>
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Users</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Users</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="container-fluid">
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Registered date</th>
+                        <th>Role</th>
+                        <th>Options</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="user in users" :key="user.id">
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>
+                            <a href="#" @click.prevent="editUser(user)">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                        </td>
+
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="userFormModel" data-backdrop="static" tabindex="-1" role="dialog"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">
+                        <span v-if="editing">Edit User</span>
+                        <span v-else>Add New User</span>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <Form ref="form" @submit="handleSubmit" :validation-schema="editing ? editUserSchema : createUserSchema"  v-slot:="{errors}" :initial-values="formValue">
+
+                    <div class="modal-body">
+
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <Field  name="name" type="text" class="form-control " id="name" :class="{'is-invalid': errors.name}"
+                                       aria-describedby="nameHelp" placeholder="Enter full name" />
+                                <span class="invalid-feedback">
+                                    {{errors.name}}
+                                </span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <Field name="email" type="email" class="form-control " id="email" :class="{'is-invalid': errors.email}"
+                                       aria-describedby="nameHelp" placeholder="Enter full name" />
+                                <span class="invalid-feedback">
+                                    {{errors.email}}
+                                </span>
+                            </div>
+
+
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <Field name="password" type="password" class="form-control " id="password" :class="{'is-invalid': errors.password}"
+                                   aria-describedby="nameHelp" placeholder="Enter password" />
+                            <span class="invalid-feedback">
+                                    {{errors.password}}
+                                </span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </Form>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script setup>
+    import {ref, onMounted, reactive} from "vue";
+    import {Form, Field} from 'vee-validate';
+    import * as yup from 'yup';
+
+    const users = ref([]);
+    const editing = ref(false);
+    const formValue = ref();
+    const form = ref(null);
+
+
+//    const form = reactive({
+//        name: '',
+//        email: '',
+//        password: '',
+//    });
+
+    const getUsers = async () => {
+        try {
+            const response = await axios.get('/api/users');
+
+            users.value = response.data;
+
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    };
+
+    const createUserSchema = yup.object({
+        name: yup.string().required(),
+        email: yup.string().email().required(),
+        password: yup.string().required().min(5),
+    });
+
+    const editUserSchema = yup.object({
+        name: yup.string().required(),
+        email: yup.string().email().required(),
+        password: yup.string().when((password, schema)=>{
+                return password ? schema.min(5) : schema;
+        }),
+    })
+
+    const createUser = (values, {resetForm, setErrors}) => {
+        axios.post('/api/users', values)
+            .then((response)=> {
+                users.value.unshift(response.data);
+                $('#userFormModel').modal('hide');
+                if (resetForm) {
+                    resetForm();
+                }
+            }).catch((error)=>{
+                if(error.response.data.errors){
+                    setErrors(error.response.data.errors);
+                    }
+        })
+    };
+
+    const addUser = () => {
+        editing.value = false;
+        $('#userFormModel').modal('show');
+
+    };
+
+    const editUser = (user) => {
+        editing.value = true;
+        form.value.resetForm();
+        $('#userFormModel').modal('show');
+        formValue.value = {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+
+        };
+    };
+
+    const updateUser = (values, {setErrors}) => {
+        axios.put('/api/users/' + formValue.value.id, values)
+            .then((response)=>{
+                const index = users.value.findIndex(user => user.id === response.data.id);
+                users.value[index] = response.data;
+                $('#userFormModel').modal('hide');
+            }).catch((error)=>{
+            if(error.response.data.errors){
+                setErrors(error.response.data.errors);
+            }
+        })
+    }
+
+    const handleSubmit = (values, actions) => {
+        if(editing.value){
+            updateUser(values, actions);
+        } else {
+            createUser(values, actions);
+        }
+    }
+
+    onMounted(() => {
+        getUsers();
+    });
+</script>
