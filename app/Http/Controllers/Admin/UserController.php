@@ -10,8 +10,14 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::latest()->get();
-        return response()->json($users);
+        $users = User::query()
+                     ->when(request('query'), function ($query, $searchQuery) {
+                         $query->where('name', 'like', "%{$searchQuery}%");
+                     })
+                     ->latest()
+                     ->paginate();
+
+        return $users;
     }
 
     public function store ()
@@ -59,5 +65,15 @@ class UserController extends Controller
             'role' => request('role'),
         ]);
         return response()->json(['success' => true]);
+    }
+
+
+
+
+    public function bulkDelete()
+    {
+        User::whereIn('id', request('ids'))->delete();
+
+        return response()->json(['message' => 'Users deleted']);
     }
 }
