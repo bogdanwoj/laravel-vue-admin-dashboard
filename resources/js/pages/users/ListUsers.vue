@@ -113,18 +113,17 @@
     import {ref, onMounted, reactive} from "vue";
     import {Form, Field} from 'vee-validate';
     import * as yup from 'yup';
+    import { useToastr } from '../../toastr.js';
 
+
+    const toastr = useToastr();
     const users = ref([]);
     const editing = ref(false);
     const formValue = ref();
     const form = ref(null);
 
 
-//    const form = reactive({
-//        name: '',
-//        email: '',
-//        password: '',
-//    });
+
 
     const getUsers = async () => {
         try {
@@ -156,6 +155,8 @@
             .then((response)=> {
                 users.value.unshift(response.data);
                 $('#userFormModel').modal('hide');
+                toastr.success('User created successfully!')
+
                 if (resetForm) {
                     resetForm();
                 }
@@ -190,6 +191,7 @@
                 const index = users.value.findIndex(user => user.id === response.data.id);
                 users.value[index] = response.data;
                 $('#userFormModel').modal('hide');
+                toastr.success('User updated successfully!')
             }).catch((error)=>{
             if(error.response.data.errors){
                 setErrors(error.response.data.errors);
