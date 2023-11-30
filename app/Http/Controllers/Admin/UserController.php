@@ -17,7 +17,9 @@ class UserController extends Controller
     public function store ()
     {
         request()->validate([
+            'name' => 'required',
             'email' => 'required|unique:users,email',
+            'password' => 'required|min:5',
         ]);
 
         return User::create([
@@ -31,7 +33,9 @@ class UserController extends Controller
     {
 
         request()->validate([
+            'name' => 'required',
             'email' => 'required|unique:users,email,' . $user->id,
+            'password' => 'sometimes|min:5',
         ]);
         $user -> update([
             'name' => request('name'),
@@ -40,5 +44,12 @@ class UserController extends Controller
         ]);
 
         return $user;
+    }
+
+    public function destroy(User $user)
+    {
+        $user->delete();
+
+        return response()->noContent();
     }
 }
