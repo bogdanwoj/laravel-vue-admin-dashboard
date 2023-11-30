@@ -38,8 +38,8 @@
                         <td>{{ user.id }}</td>
                         <td>{{ user.name }}</td>
                         <td>{{ user.email }}</td>
-                        <td>-</td>
-                        <td>-</td>
+                        <td>{{ user.formatted_created_at }}</td>
+                        <td>{{user.role}}</td>
                         <td>
                             <a href="#" @click.prevent="editUser(user)">
                                 <i class="fa fa-edit"></i>
