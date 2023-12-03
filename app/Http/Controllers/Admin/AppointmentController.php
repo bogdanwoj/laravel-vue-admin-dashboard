@@ -55,4 +55,35 @@ class AppointmentController extends Controller
 
         return response()->json(['message' => 'success']);
     }
+
+    public function edit(Appointment $appointment)
+    {
+        return $appointment;
+    }
+
+    public function update(Appointment $appointment)
+    {
+        $validated = request()->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'start_time' => 'required',
+            'end_time' => 'required',
+            'client_id' => 'required',
+        ],
+            [
+                'client_id.required' => 'The client name field is required.'
+            ]);
+
+
+        $appointment->update($validated);
+
+        return response()->json(['message' => 'success']);
+    }
+
+    public function destroy(Appointment $appointment)
+    {
+        $appointment->delete();
+
+        return response()->json(['success' => true], 200);
+    }
 }
