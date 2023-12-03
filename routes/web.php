@@ -1,6 +1,7 @@
 <?php
 
     use App\Http\Controllers\Admin\AppointmentStatusController;
+    use App\Http\Controllers\Admin\ClientController;
     use App\Http\Controllers\Admin\UserController;
     use App\Http\Controllers\Admin\AppointmentController;
     use App\Http\Controllers\ApplicationController;
@@ -32,6 +33,10 @@
     Route::get('/api/appointment-status', [AppointmentStatusController::class, 'getStatusWithCount']);
 
 
+    Route::get('/api/clients', [ClientController::class, 'index']);
+
+
     Route::get('/api/appointments', [AppointmentController::class, 'index']);
+    Route::post('/api/appointments/create', [AppointmentController::class, 'store']);
 
     Route::get('{view}', ApplicationController::class)->where('view', '(.*)');

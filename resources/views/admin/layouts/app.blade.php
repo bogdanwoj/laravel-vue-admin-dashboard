@@ -181,10 +181,10 @@
                     </li>
 
                     <li class="nav-item">
-                        <router-link to="/admin/appointments" active-class="active" class="nav-link">
+                        <router-link to="/admin/appointments" :class="$route.path.startsWith('/admin/appointments') ? 'active' : ''" class="nav-link">
                             <i class="nav-icon fas fa-calendar-alt"></i>
                             <p>
-                                Appintments
+                                Appointments
                             </p>
                         </router-link>
                     </li>
