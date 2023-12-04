@@ -3,6 +3,7 @@
     use App\Http\Controllers\Admin\AppointmentStatusController;
     use App\Http\Controllers\Admin\ClientController;
     use App\Http\Controllers\Admin\DashboardStatController;
+    use App\Http\Controllers\Admin\ProfileController;
     use App\Http\Controllers\Admin\SettingController;
     use App\Http\Controllers\Admin\UserController;
     use App\Http\Controllers\Admin\AppointmentController;
@@ -37,22 +38,24 @@
 
         Route::get('/api/appointment-status', [AppointmentStatusController::class, 'getStatusWithCount']);
 
-
         Route::get('/api/clients', [ClientController::class, 'index']);
 
         Route::get('/api/stats/appointments', [DashboardStatController::class, 'appointments']);
         Route::get('/api/stats/users', [DashboardStatController::class, 'users']);
 
-
         Route::get('/api/settings', [SettingController::class, 'index']);
         Route::post('/api/settings', [SettingController::class, 'update']);
-
 
         Route::get('/api/appointments', [AppointmentController::class, 'index']);
         Route::post('/api/appointments/create', [AppointmentController::class, 'store']);
         Route::get('/api/appointments/{appointment}/edit', [AppointmentController::class, 'edit']);
         Route::put('/api/appointments/{appointment}/edit', [AppointmentController::class, 'update']);
         Route::delete('/api/appointments/{appointment}', [AppointmentController::class, 'destroy']);
+
+        Route::get('/api/profile', [ProfileController::class, 'index']);
+        Route::put('/api/profile', [ProfileController::class, 'update']);
+        Route::post('/api/upload-profile-image', [ProfileController::class, 'uploadImage']);
+
     });
 
 
