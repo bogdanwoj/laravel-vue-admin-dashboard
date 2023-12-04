@@ -2,6 +2,7 @@
 
     use App\Http\Controllers\Admin\AppointmentStatusController;
     use App\Http\Controllers\Admin\ClientController;
+    use App\Http\Controllers\Admin\DashboardStatController;
     use App\Http\Controllers\Admin\UserController;
     use App\Http\Controllers\Admin\AppointmentController;
     use App\Http\Controllers\ApplicationController;
@@ -37,6 +38,9 @@
 
 
         Route::get('/api/clients', [ClientController::class, 'index']);
+
+        Route::get('/api/stats/appointments', [DashboardStatController::class, 'appointments']);
+        Route::get('/api/stats/users', [DashboardStatController::class, 'users']);
 
 
         Route::get('/api/appointments', [AppointmentController::class, 'index']);
