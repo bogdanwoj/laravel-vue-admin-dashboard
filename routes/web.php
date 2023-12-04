@@ -3,6 +3,7 @@
     use App\Http\Controllers\Admin\AppointmentStatusController;
     use App\Http\Controllers\Admin\ClientController;
     use App\Http\Controllers\Admin\DashboardStatController;
+    use App\Http\Controllers\Admin\SettingController;
     use App\Http\Controllers\Admin\UserController;
     use App\Http\Controllers\Admin\AppointmentController;
     use App\Http\Controllers\ApplicationController;
@@ -41,6 +42,10 @@
 
         Route::get('/api/stats/appointments', [DashboardStatController::class, 'appointments']);
         Route::get('/api/stats/users', [DashboardStatController::class, 'users']);
+
+
+        Route::get('/api/settings', [SettingController::class, 'index']);
+        Route::post('/api/settings', [SettingController::class, 'update']);
 
 
         Route::get('/api/appointments', [AppointmentController::class, 'index']);
