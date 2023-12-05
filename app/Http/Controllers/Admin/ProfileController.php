@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\Fortify\UpdateUserPassword;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -44,11 +45,20 @@ class ProfileController extends Controller
             $link = Storage::putFile('/photos', $request->file('profile_picture'));
 
             $request->user()->update(['avatar' => $link]);
-//            dd($link);
 
             return response()->json(['avatar' => $link, 'message' => 'Profile picture uploaded successfully!'], 201);
         }
 
         return response()->json(['message' => 'No profile picture provided.'], 400);
+    }
+
+    public function changePassword(Request $request, UpdateUserPassword $updater)
+    {
+        $updater->update(auth()->user(), [
+            'current_password' => $request->currentPassword,
+            'password' => $request->password,
+            'password_confirmation' => $request->passwordConfirmation,
+        ]);
+        return response()->json(['message' => 'Password changed successfully!']);
     }
 }
