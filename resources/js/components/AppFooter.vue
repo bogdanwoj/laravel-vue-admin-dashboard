@@ -1,8 +1,8 @@
 <template>
     <footer class="main-footer">
-        <strong>{{settings?.app_name}}</strong>
+
         <div class="float-right d-none d-sm-inline">
-            Anything you want {{ authUserStore.user.name }}
+            <strong>{{settingStore.setting.app_name}}</strong>
         </div>
 
     </footer>
@@ -12,10 +12,9 @@
     import { useAuthUserStore } from "../stores/AuthUserStore";
 
     const authUserStore = useAuthUserStore();
+    import { useSettingStore } from "../stores/SettingStore";
 
+    const settingStore = useSettingStore();
 
-    defineProps({
-       settings: Object,
-    });
 
 </script>

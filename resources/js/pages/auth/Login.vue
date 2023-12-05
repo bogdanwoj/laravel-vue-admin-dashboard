@@ -62,7 +62,13 @@
 
 <script setup>
     import {ref, reactive} from 'vue';
+    import { useRouter } from "vue-router";
+    import { useAuthUserStore } from "../../stores/AuthUserStore";
 
+    const authUserStore = useAuthUserStore();
+
+
+    const router = useRouter();
     const form = reactive({
         email: '',
         password: '',
@@ -77,7 +83,8 @@
         errorMessage.value = '';
         axios.post('/login', form)
             .then(() => {
-                window.location.href="/admin/dashboard";
+                router.push('/admin/dashboard');
+
             })
             .catch((error) => {
                 errorMessage.value = error.response.data.message;

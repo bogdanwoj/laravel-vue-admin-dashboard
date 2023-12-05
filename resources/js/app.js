@@ -6,6 +6,10 @@ import 'admin-lte/dist/js/adminlte.min.js';
 import {createApp} from "vue/dist/vue.esm-bundler.js";
 import { createPinia } from 'pinia';
 import {createRouter, createWebHistory} from "vue-router";
+import { useAuthUserStore } from './stores/AuthUserStore';
+import { useSettingStore } from './stores/SettingStore';
+
+
 
 import Routes from './routes.js';
 import Login from './pages/auth/Login.vue';
@@ -19,15 +23,27 @@ const router = createRouter({
     history: createWebHistory(),
 });
 
+router.beforeEach((to, from) =>{
+
+    const authUserStore = useAuthUserStore();
+    if(authUserStore.user.name === '' && to.name !== 'admin.login') {
+        authUserStore.getAuthUser();
+        const settingStore = useSettingStore();
+        settingStore.getSetting();
+    }
+});
+
 app.use(pinia);
 app.use(router);
 
 
-if(window.location.pathname === '/login') {
-    const currentApp = createApp({});
-    currentApp.component('Login', Login);
-    currentApp.mount('#login');
-} else {
-    app.mount('#app');
-}
+//
+//if(window.location.pathname === '/login') {
+//    const currentApp = createApp({});
+//    currentApp.component('Login', Login);
+//    currentApp.mount('#login');
+//} else {
+//    app.mount('#app');
+//}
 
+app.mount('#app');
