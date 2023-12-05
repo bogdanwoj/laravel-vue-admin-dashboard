@@ -42,12 +42,7 @@
             });
     };
 
-    const logout = () => {
-        axios.post('/logout')
-            .then((response) => {
-               window.location.href = '/login';
-            });
-    };
+
 
     onMounted(() => {
         fetchSettings();

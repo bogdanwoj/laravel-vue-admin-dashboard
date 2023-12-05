@@ -10,7 +10,7 @@
 
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="image">
-                    <img :src="user?.avatar" class="img-circle elevation-2" alt="User Image">
+                    <img :src="authUserStore.user.avatar" class="img-circle elevation-2" alt="User Image">
                 </div>
                 <div class="info">
                     <div class="info">
@@ -101,5 +101,12 @@
         user: Object,
         settings: Object,
     });
+
+    const logout = () => {
+        axios.post('/logout')
+            .then((response) => {
+                window.location.href = '/login';
+            });
+    };
 
 </script>
