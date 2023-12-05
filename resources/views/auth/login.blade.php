@@ -10,10 +10,10 @@
 </head>
 
 <body class="hold-transition login-page">
-    <div id="app">
-        <router-view>
+    <div id="login">
+
             <Login />
-        </router-view>
+
     </div>
 </body>
 
