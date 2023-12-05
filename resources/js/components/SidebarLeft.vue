@@ -13,7 +13,9 @@
                     <img :src="user?.avatar" class="img-circle elevation-2" alt="User Image">
                 </div>
                 <div class="info">
-                    <router-link to="/admin/profile" class="d-block">{{user?.name}}</router-link>
+                    <div class="info">
+                        <a href="#" class="d-block">{{ authUserStore.user.name }}</a>
+                    </div>
                 </div>
             </div>
 
@@ -91,6 +93,9 @@
 </template>
 
 <script setup>
+
+    import { useAuthUserStore } from '../stores/AuthUserStore';
+    const authUserStore = useAuthUserStore();
 
     defineProps({
         user: Object,
