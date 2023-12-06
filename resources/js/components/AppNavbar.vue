@@ -1,15 +1,17 @@
 <template>
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <nav class="main-header navbar navbar-expand " :class="settingStore.theme === 'dark' ? 'navbar-dark' : 'navbar-light' ">
 
     <ul class="navbar-nav">
         <li class="nav-item" id="toggleMenuIcon">
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
+<!--        <li class="nav-item d-none d-sm-inline-block">-->
+<!--            <router-link to="/admin/dashboard" class="nav-link">Home</router-link>-->
+<!--        </li>-->
         <li class="nav-item d-none d-sm-inline-block">
-            <router-link to="/admin/dashboard" class="nav-link">Home</router-link>
-        </li>
-        <li class="nav-item d-none d-sm-inline-block">
-            <a href="#" class="nav-link">Contact</a>
+            <a @click.prevent="settingStore.changeTheme" href="#" class="nav-link">
+                <i class="far" :class="settingStore.theme === 'dark' ? 'fa-moon' : 'fa-sun'"> </i>
+            </a>
         </li>
     </ul>
 
@@ -133,3 +135,11 @@
     </ul>
     </nav>
 </template>
+
+<script setup>
+    import { useSettingStore } from "../stores/SettingStore";
+
+    const settingStore = useSettingStore();
+
+
+</script>

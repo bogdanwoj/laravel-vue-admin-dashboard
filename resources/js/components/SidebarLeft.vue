@@ -14,7 +14,7 @@
                 </div>
                 <div class="info">
                     <div class="info">
-                        <a href="#" class="d-block">{{ authUserStore.user.name }}</a>
+                        <router-link to="/admin/profile" class="d-block">{{ authUserStore.user.name }}</router-link>
                     </div>
                 </div>
             </div>
